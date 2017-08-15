@@ -23,17 +23,19 @@ function getCookie(cname) {
 }
 
 function Terminal() {
+	//Change these
 	this.username = "jbloggs";
 	this.password = "Password1";
 	this.terminalName = "imnotcreative";
 	this.computerGreeting = "   ____                     ____                ____   ___   ___   ___  <br>  / ___|___  _ __ ___  _ __/ ___| _   _ ___    |___ \\ / _ \\ / _ \\ / _ \\ <br> | |   / _ \\| '_ ` _ \\| '_ \\___ \\| | | / __|     __) | | | | | | | | | |<br> | |__| (_) | | | | | | |_) |__) | |_| \\__ \\    / __/| |_| | |_| | |_| |<br>  \\____\\___/|_| |_| |_| .__/____/ \\__, |___/   |_____|\\___/ \\___/ \\___/ <br>                      |_|         |___/                                 <br><br>THIS 'CompSys 2000' COMPUTER SYSTEM IS LICENSED TO VERONICS INC. NO UNAUTHORISED ACCESS.";
+	this.terminalinput = '<input onblur="this.focus()" autofocus type="text" id="command">';
+	this.cookieExpiryDays = 10000;
+	
+	this.suFlag = false;
+	this.suData = "";
 	this.envstack = [];
 	this.history = [];
 	this.historypointer = -1;
-	this.terminalinput = '<input onblur="this.focus()" autofocus type="text" id="command">';
-	this.cookieExpiryDays = 10000;
-	this.suFlag = false;
-	this.suData = "";
 
 	this.init = function(){
 		if (getCookie("username")!=""&&getCookie("password")!=""){

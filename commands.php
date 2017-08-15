@@ -1,4 +1,5 @@
 <?php
+//Change this
 $user = '{
 	"jbloggs": {
 		"password": "Password1",
