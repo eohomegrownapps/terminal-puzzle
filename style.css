@@ -1,0 +1,35 @@
+#terminal {
+	width: 100vw;
+	height: 100vh;
+	background-color: #0F0F0F;
+	color: #F1F1F1;
+	overflow-y: auto;
+	top: 0;
+	left: 0;
+	position: absolute;
+	padding: 20px;
+	font-size: 16px;
+	font-family: 'Source Code Pro', monospace;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.red {
+	color: #ff2424;
+}
+
+#command{
+	background-color: transparent;
+    border: none;
+    color: #f1f1f1;
+    font-size: 16px;
+	font-family: 'Source Code Pro', monospace;
+	width: calc(100vw - 400px);
+	min-width: 100px;
+}
+
+#command:focus{
+	outline: none;
+}
