@@ -11,7 +11,7 @@ $user = '{
 	},
 	"jdoe": {
 		"password": "123456789",
-		"greeting": "Welcome, John Doe. Your security clearance level is 2.",
+		"greeting": "Welcome, Jane Doe. Your security clearance level is 2.",
 		"files": {
 			"blah.txt": "123456789<br>12345678<br>234567<br>2345678"
 		}
