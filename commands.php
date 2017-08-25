@@ -1,9 +1,8 @@
-
+<?php
 //Change this
 require 'gamedata.php';
 
 $users = json_decode($user);
-
 function authenticate($username,$password){
 	global $users;
 	if (property_exists($users,$username)){
@@ -18,8 +17,9 @@ if (isset($_POST['command'])){
 	if ($_POST['command']=="su"){
 		if (isset($_POST['username'])&&isset($_POST['password'])){
 			if (authenticate($_POST['username'],$_POST['password'])){
-				echo $users->$_POST['username']->greeting;
-				die();
+                                $real_user = $_POST['username'];
+				echo $users->$real_user->greeting;
+                                die();
 			}
 		}
 		echo "error";
@@ -27,6 +27,7 @@ if (isset($_POST['command'])){
 	} else {
 		if (isset($_POST['username'])&&isset($_POST['password'])){
 			if (authenticate($_POST['username'],$_POST['password'])){
+                                $real_user = $_POST['username'];
 				$coms = explode(" ", $_POST['command']);
 				if ($coms[0]==""){
 					die();
@@ -37,7 +38,7 @@ if (isset($_POST['command'])){
 								echo "<span class='red'>Error: the command 'ls' does not take any arguments</span><br>";
 							} else {
 								$str = "";
-								foreach ($users->$_POST['username']->files as $key => $value) {
+								foreach ($users->$real_user->files as $key => $value) {
 									$str = $str.$key."<br>";
 								}
 								echo $str;
@@ -45,9 +46,10 @@ if (isset($_POST['command'])){
 							break;
 						case 'cat':
 							if (count($coms)!=2){
-								echo "<span class='red'>Error: the command 'ls' takes exactly one argument</span><br>";
-							} else if (property_exists($users->$_POST['username']->files, $coms[1])){
-								echo $users->$_POST['username']->files->$coms[1]."<br>";
+								echo "<span class='red'>Error: the command 'cat' takes exactly one argument</span><br>";
+							} else if (property_exists($users->$real_user->files, $coms[1])){
+                                                                $file_name = $coms[1];
+								echo $users->$real_user->files->$file_name."<br>";
 							} else {
 								echo "<span class='red'>Error: file '".$coms[1]."' not found</span><br>";
 							}
