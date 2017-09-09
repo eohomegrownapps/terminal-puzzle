@@ -19,6 +19,21 @@ function returnText($text, $cwd){
 	echo $json;
 }
 
+function checkDir($string) {
+	$real_user = $_POST['username'];
+	$struc_array = explode("/", $string);
+	$end_dir = array_pop($struc_array);
+	$r_prop = $users->$real_user->files;
+	foreach ($struc_array as $dir) {
+		$r_prop = $r_prop->$dir;
+	}
+	if (property_exists($r_prop, $end_dir)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 if (isset($_POST['command'])&&isset($_POST['cwd'])){
 	//handle su separately
 	if ($_POST['command']=="su"){
