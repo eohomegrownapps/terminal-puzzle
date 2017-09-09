@@ -1,34 +1,34 @@
 //w3schools cookie functions
 function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	var d = new Date();
+	d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	var expires = "expires="+ d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i <ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
 }
 
 function Terminal() {
 	//Change these
-        this.cwd = "";
+	this.cwd = "";
 	this.username = "jbloggs";
 	this.password = "Password1";
 	this.terminalName = "imnotcreative";
-	this.computerGreeting = "   ____                     ____                ____   ___   ___   ___  <br>  / ___|___  _ __ ___  _ __/ ___| _   _ ___    |___ \\ / _ \\ / _ \\ / _ \\ <br> | |   / _ \\| '_ ` _ \\| '_ \\___ \\| | | / __|     __) | | | | | | | | | |<br> | |__| (_) | | | | | | |_) |__) | |_| \\__ \\    / __/| |_| | |_| | |_| |<br>  \\____\\___/|_| |_| |_| .__/____/ \\__, |___/   |_____|\\___/ \\___/ \\___/ <br>                      |_|         |___/                                 <br><br>THIS 'CompSys 2000' COMPUTER SYSTEM IS LICENSED TO VERONICS INC. NO UNAUTHORISED ACCESS.";
+	this.computerGreeting = "   ____					 ____				____   ___   ___   ___  <br>  / ___|___  _ __ ___  _ __/ ___| _   _ ___	|___ \\ / _ \\ / _ \\ / _ \\ <br> | |   / _ \\| '_ ` _ \\| '_ \\___ \\| | | / __|	 __) | | | | | | | | | |<br> | |__| (_) | | | | | | |_) |__) | |_| \\__ \\	/ __/| |_| | |_| | |_| |<br>  \\____\\___/|_| |_| |_| .__/____/ \\__, |___/   |_____|\\___/ \\___/ \\___/ <br>					  |_|		 |___/								 <br><br>THIS 'CompSys 2000' COMPUTER SYSTEM IS LICENSED TO VERONICS INC. NO UNAUTHORISED ACCESS.";
 	this.terminalinput = '<input onblur="this.focus()" autofocus type="text" id="command">';
 	this.cookieExpiryDays = 10000;
 	
@@ -128,7 +128,9 @@ function Terminal() {
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 				if (xmlhttp.status === 200) {
-					t.output(xmlhttp.responseText);
+					var json = JSON.parse(xmlhttp.responseText);
+					t.cwd=json[1];
+					t.output(json[0]);
 				} else {
 					t.output("<span class='red'>Error: connection lost</span><br>");
 				}
@@ -136,7 +138,7 @@ function Terminal() {
 		};
 		xmlhttp.open("POST", "commands.php", true);
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xmlhttp.send("command="+command+"&username="+this.username+"&password="+this.password+"&cwd="+this.cwd);
+		xmlhttp.send("command="+command+"&cwd="+this.cwd+"&username="+this.username+"&password="+this.password+"&cwd="+this.cwd);
 	}
 
 	this.output = function(text){
@@ -179,7 +181,7 @@ function Terminal() {
 		};
 		xmlhttp.open("POST", "commands.php", true);
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xmlhttp.send("command=su&username="+username+"&password="+password);
+		xmlhttp.send("command=su&cwd="+this.cwd+"&username="+username+"&password="+password);
 	}
 
 	this.openEnvironment = function(username,password,usergreet,nostack){

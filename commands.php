@@ -12,14 +12,21 @@ function authenticate($username,$password){
 	}
 	return false;
 }
-if (isset($_POST['command'])){
+
+function returnText($text, $cwd){
+	$arr = array($text, $cwd);
+	$json = json_encode($arr);
+	echo $json;
+}
+
+if (isset($_POST['command'])&&isset($_POST['cwd'])){
 	//handle su separately
 	if ($_POST['command']=="su"){
 		if (isset($_POST['username'])&&isset($_POST['password'])){
 			if (authenticate($_POST['username'],$_POST['password'])){
-                                $real_user = $_POST['username'];
+								$real_user = $_POST['username'];
 				echo $users->$real_user->greeting;
-                                die();
+								die();
 			}
 		}
 		echo "error";
@@ -27,68 +34,69 @@ if (isset($_POST['command'])){
 	} else {
 		if (isset($_POST['username'])&&isset($_POST['password'])){
 			if (authenticate($_POST['username'],$_POST['password'])){
-                                $real_user = $_POST['username'];
+								$real_user = $_POST['username'];
 				$coms = explode(" ", $_POST['command']);
 				if ($coms[0]==""){
 					die();
 				} else {
+					$cwd = $_POST['cwd'];
 					switch ($coms[0]) {
 						case 'ls':
 							if (count($coms) > 2){
-								echo "<span class='red'>Error: the command 'ls' takes a maximum of one argument</span><br>";
+								returnText("<span class='red'>Error: the command 'ls' takes a maximum of one argument</span><br>",$cwd);
 							} else if (count($coms) == 2) {
-                                                                $struc_array = explode("/", $coms[1]);
-                                                                $end_dir = array_pop($struc_array);
-                                                                $r_prop = $users->$real_user->files;
-                                                                foreach ($struc_array as $dir) {
-                                                                        $r_prop = $r_prop->$dir;
-                                                                }
-                                                                if (property_exists($r_prop, $end_dir)) {
-								        $str = "";
-								        foreach ($r_prop->$end_dir as $key => $value) {
-									       $str = $str.$key."<br>";
-								        }
-								        echo $str;
-                                                                } else {
-                                                                         echo "<span class='red'>Error: there is no such file or directory '".$end_dir."'</span><br>";
-                                                                }
+								$struc_array = explode("/", $coms[1]);
+								$end_dir = array_pop($struc_array);
+								$r_prop = $users->$real_user->files;
+								foreach ($struc_array as $dir) {
+										$r_prop = $r_prop->$dir;
+								}
+								if (property_exists($r_prop, $end_dir)) {
+									$str = "";
+									foreach ($r_prop->$end_dir as $key => $value) {
+										$str = $str.$key."<br>";
+									}
+									returnText($str,$cwd);;
+								} else {
+									returnText("<span class='red'>Error: there is no such file or directory '".$end_dir."'</span><br>",$cwd);
+								}
 							} else {
-                                                                $str = "";
-                                                                foreach ($users->$real_user->files as $key => $value) {
-                                                                        $str = $str.$key."<br>";
-                                                                }
-                                                                echo $str;
-                                                        }
+								$str = "";
+								foreach ($users->$real_user->files as $key => $value) {
+										$str = $str.$key."<br>";
+								}
+								returnText($str,$cwd);;
+							}
 							break;
 						case 'cat':
-                                                        $struc_array = explode("/", $coms[1]);
-                                                        $r_filename = array_pop($struc_array);
-                                                        $r_prop = $users->$real_user->files;
-                                                        foreach ($struc_array as $dir) {
-                                                                $r_prop = $r_prop->$dir;
-                                                        }
+							$struc_array = explode("/", $coms[1]);
+							$r_filename = array_pop($struc_array);
+							$r_prop = $users->$real_user->files;
+							foreach ($struc_array as $dir) {
+									$r_prop = $r_prop->$dir;
+							}
 							if (count($coms)!=2){
-								echo "<span class='red'>Error: the command 'cat' takes exactly one argument</span><br>";
+								returnText("<span class='red'>Error: the command 'cat' takes exactly one argument</span><br>",$cwd);
 							} else if (property_exists($r_prop, $r_filename)) {
-								echo $r_prop->$r_filename."<br>";
+								returnText($r_prop->$r_filename."<br>",$cwd);
 							} else {
-								echo "<span class='red'>Error: file '".$coms[1]."' not found</span><br>";
+								returnText("<span class='red'>Error: file '".$coms[1]."' not found</span><br>",$cwd);
 							}
 							break;
 						default:
-							echo "<span class='red'>Error: command '".$coms[0]."' not recognised</span><br>";
+							returnText("<span class='red'>Error: command '".$coms[0]."' not recognised</span><br>",$cwd);;
 							break;
 					}
 				}
 			} else {
-				echo "<span class='red'>Error: the security of the web shell has been compromised</span><br>";
+				returnText("<span class='red'>Error: the security of the web shell has been compromised</span><br>","");
 			}
 		} else {
-			echo "<span class='red'>Error: the security of the web shell has been compromised</span><br>";
+			returnText("<span class='red'>Error: the security of the web shell has been compromised</span><br>","");
 		}
 	}
 
 } else {
-	echo "<span class='red'>Error: command not specified</span><br>";
+	returnText("<span class='red'>Error: command not specified</span><br>",$_POST['cwd']);
 }
 ?>

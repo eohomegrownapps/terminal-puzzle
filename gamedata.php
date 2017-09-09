@@ -14,9 +14,9 @@ $user = '{
 		"greeting": "Welcome, John Doe. Your security clearance level is 2.",
 		"files": {
 			"blah.txt": "123456789<br>12345678<br>234567<br>2345678",
-                        "mydir": {
-                            "test.txt": "blah"
-                        }
+			"mydir": {
+				"test.txt": "blah"
+			}
 		}
 	}
 }';
