@@ -83,6 +83,32 @@ if (isset($_POST['command'])&&isset($_POST['cwd'])){
 								returnText("<span class='red'>Error: file '".$coms[1]."' not found</span><br>",$cwd);
 							}
 							break;
+						case 'cd':
+							$com_text = rtrim($coms[1], '/');
+							$struc_array = explode("/", $com_text);
+							$end_dir = array_pop($struc_array);
+							if ($struc_array[0] == "") {
+								returnText("<span class='red'>Error: root-based 'cd' is not permitted</span><br>",$cwd);
+							}
+							if ($struc_array[0] == "~") {
+								$firstelem = array_shift($struc_array);
+								$r_prop = $users->$real_user->files;
+								foreach ($struc_array as $dir) {
+									$r_prop = $r_prop->$dir;
+								}
+								if (property_exists($r_prop, $end_dir)) {
+									$cwd = $com_text;
+								}
+							}
+							else {
+								$r_prop = $users->$real_user->files;
+								foreach ($struc_array as $dir) {
+									$r_prop = $r_prop->$dir;
+								}
+								if (property_exists($r_prop, $end_dir)) {
+									$cwd .= $com_text;
+								}
+							}
 						default:
 							returnText("<span class='red'>Error: command '".$coms[0]."' not recognised</span><br>",$cwd);;
 							break;
