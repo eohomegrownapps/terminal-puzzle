@@ -37,6 +37,7 @@ function Terminal() {
 	this.envstack = [];
 	this.history = [];
 	this.historypointer = -1;
+	this.directorySplitMarker = "/";
 
 	this.init = function(){
 		if (getCookie("username")!=""&&getCookie("password")!=""){
@@ -145,7 +146,13 @@ function Terminal() {
 		if (document.contains(document.getElementById("command"))) {
 			document.getElementById("terminaloutput").removeChild(document.getElementById("command"));
 		}
-		document.getElementById("terminaloutput").innerHTML+=text+"<span class='bold'>"+this.username+"@"+this.terminalName+":~"+this.cwd+" $ </span>"+this.terminalinput;
+		var cwduse;
+		if (this.cwd==""){
+			cwduse = "";
+		} else {
+			cwduse = this.cwd.split(this.directorySplitMarker)[-1];
+		}
+		document.getElementById("terminaloutput").innerHTML+=text+"<span class='bold'>"+this.username+"@"+this.terminalName+":~"+cwduse+" $ </span>"+this.terminalinput;
 		document.getElementById("command").focus();
 	}
 
