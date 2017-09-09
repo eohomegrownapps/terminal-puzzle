@@ -56,7 +56,7 @@ if (isset($_POST['command'])&&isset($_POST['cwd'])){
 									foreach ($r_prop->$end_dir as $key => $value) {
 										$str = $str.$key."<br>";
 									}
-									returnText($str,$cwd);;
+									returnText($str,$cwd);
 								} else {
 									returnText("<span class='red'>Error: there is no such file or directory '".$end_dir."'</span><br>",$cwd);
 								}
@@ -65,7 +65,7 @@ if (isset($_POST['command'])&&isset($_POST['cwd'])){
 								foreach ($users->$real_user->files as $key => $value) {
 										$str = $str.$key."<br>";
 								}
-								returnText($str,$cwd);;
+								returnText($str,$cwd);
 							}
 							break;
 						case 'cat':
@@ -120,7 +120,7 @@ if (isset($_POST['command'])&&isset($_POST['cwd'])){
 							}
 							returnText("",$cwd);
 						default:
-							returnText("<span class='red'>Error: command '".$coms[0]."' not recognised</span><br>",$cwd);;
+							returnText("<span class='red'>Error: command '".$coms[0]."' not recognised</span><br>",$cwd);
 							break;
 					}
 				}
