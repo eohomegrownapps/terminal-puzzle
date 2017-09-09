@@ -24,6 +24,7 @@ function getCookie(cname) {
 
 function Terminal() {
 	//Change these
+        this.cwd = "";
 	this.username = "jbloggs";
 	this.password = "Password1";
 	this.terminalName = "imnotcreative";
@@ -135,14 +136,14 @@ function Terminal() {
 		};
 		xmlhttp.open("POST", "commands.php", true);
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xmlhttp.send("command="+command+"&username="+this.username+"&password="+this.password);
+		xmlhttp.send("command="+command+"&username="+this.username+"&password="+this.password+"&cwd="+this.cwd);
 	}
 
 	this.output = function(text){
 		if (document.contains(document.getElementById("command"))) {
 			document.getElementById("terminaloutput").removeChild(document.getElementById("command"));
 		}
-		document.getElementById("terminaloutput").innerHTML+=text+"<span class='bold'>"+this.username+"@"+this.terminalName+":~ $ </span>"+this.terminalinput;
+		document.getElementById("terminaloutput").innerHTML+=text+"<span class='bold'>"+this.username+"@"+this.terminalName+":~"+this.cwd+" $ </span>"+this.terminalinput;
 		document.getElementById("command").focus();
 	}
 

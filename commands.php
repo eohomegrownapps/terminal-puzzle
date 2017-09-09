@@ -34,22 +34,43 @@ if (isset($_POST['command'])){
 				} else {
 					switch ($coms[0]) {
 						case 'ls':
-							if (count($coms)!=1){
-								echo "<span class='red'>Error: the command 'ls' does not take any arguments</span><br>";
+							if (count($coms) > 2){
+								echo "<span class='red'>Error: the command 'ls' takes a maximum of one argument</span><br>";
+							} else if (count($coms) == 2) {
+                                                                $struc_array = explode("/", $coms[1]);
+                                                                $end_dir = array_pop($struc_array);
+                                                                $r_prop = $users->$real_user->files;
+                                                                foreach ($struc_array as $dir) {
+                                                                        $r_prop = $r_prop->$dir;
+                                                                }
+                                                                if (property_exists($r_prop, $end_dir)) {
+								        $str = "";
+								        foreach ($r_prop->$end_dir as $key => $value) {
+									       $str = $str.$key."<br>";
+								        }
+								        echo $str;
+                                                                } else {
+                                                                         echo "<span class='red'>Error: there is no such file or directory '".$end_dir."'</span><br>";
+                                                                }
 							} else {
-								$str = "";
-								foreach ($users->$real_user->files as $key => $value) {
-									$str = $str.$key."<br>";
-								}
-								echo $str;
-							}
+                                                                $str = "";
+                                                                foreach ($users->$real_user->files as $key => $value) {
+                                                                        $str = $str.$key."<br>";
+                                                                }
+                                                                echo $str;
+                                                        }
 							break;
 						case 'cat':
+                                                        $struc_array = explode("/", $coms[1]);
+                                                        $r_filename = array_pop($struc_array);
+                                                        $r_prop = $users->$real_user->files;
+                                                        foreach ($struc_array as $dir) {
+                                                                $r_prop = $r_prop->$dir;
+                                                        }
 							if (count($coms)!=2){
 								echo "<span class='red'>Error: the command 'cat' takes exactly one argument</span><br>";
-							} else if (property_exists($users->$real_user->files, $coms[1])){
-                                                                $file_name = $coms[1];
-								echo $users->$real_user->files->$file_name."<br>";
+							} else if (property_exists($r_prop, $r_filename)) {
+								echo $r_prop->$r_filename."<br>";
 							} else {
 								echo "<span class='red'>Error: file '".$coms[1]."' not found</span><br>";
 							}
