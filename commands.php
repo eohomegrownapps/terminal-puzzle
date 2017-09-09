@@ -91,13 +91,20 @@ if (isset($_POST['command'])&&isset($_POST['cwd'])){
 								returnText("<span class='red'>Error: root-based 'cd' is not permitted</span><br>",$cwd);
 							}
 							if ($struc_array[0] == "~") {
-								$firstelem = array_shift($struc_array);
-								$r_prop = $users->$real_user->files;
-								foreach ($struc_array as $dir) {
-									$r_prop = $r_prop->$dir;
+								if (count($struc_array) > 1) {
+									$firstelem = array_shift($struc_array);
+									$r_prop = $users->$real_user->files;
+									foreach ($struc_array as $dir) {
+										$r_prop = $r_prop->$dir;
+									}
+									if (property_exists($r_prop, $end_dir)) {
+										$cwd = implode("/", $struc_array);
+									} else {
+										returnText("<span class='red'>Error: there is no such directory '".$end_dir."'</span><br>",$cwd);
+									}
 								}
-								if (property_exists($r_prop, $end_dir)) {
-									$cwd = $com_text;
+								else {
+									$cwd = "";
 								}
 							}
 							else {
@@ -107,8 +114,11 @@ if (isset($_POST['command'])&&isset($_POST['cwd'])){
 								}
 								if (property_exists($r_prop, $end_dir)) {
 									$cwd .= $com_text;
+								} else {
+									returnText("<span class='red'>Error: there is no such directory '".$end_dir."'</span><br>",$cwd);
 								}
 							}
+							returnText("",$cwd);
 						default:
 							returnText("<span class='red'>Error: command '".$coms[0]."' not recognised</span><br>",$cwd);;
 							break;
